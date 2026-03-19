@@ -5,6 +5,7 @@ import com.github.javafaker.Commerce;
 import com.github.javafaker.Faker;
 import csd230.bookstore.entities.BookEntity;
 import csd230.bookstore.entities.CartEntity;
+import csd230.bookstore.entities.MagazineEntity;
 import csd230.bookstore.entities.UserEntity;
 import csd230.bookstore.repositories.CartEntityRepository;
 import csd230.bookstore.repositories.ProductEntityRepository;
@@ -46,13 +47,9 @@ public class Application implements CommandLineRunner {
 
     @Override
     @Transactional
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
         Faker faker = new Faker();
         Commerce cm = faker.commerce();
-        com.github.javafaker.Number number = faker.number();
-        com.github.javafaker.Book fakeBook = faker.book();
-        String name = cm.productName();
-        String description = cm.material();
 
         for (int i = 0; i < 10; i++) {
             // We call the faker methods inside the loop so each book gets unique data
@@ -72,6 +69,17 @@ public class Application implements CommandLineRunner {
             productRepository.save(book);
 
             System.out.println("Saved Book " + (i + 1) + ": " + title + " by " + author);
+        }
+
+        for (int i = 0; i < 10; i++) {
+            MagazineEntity mag = new MagazineEntity();
+            mag.setTitle(faker.book().title() + " Monthly");
+            mag.setPrice(Double.parseDouble(faker.commerce().price()));
+            mag.setCopies(20);
+            mag.setOrderQty(100);
+            mag.setCurrentIssue(java.time.LocalDateTime.now());
+            productRepository.save(mag);
+            System.out.println("Saved Magazine " + (i + 1) + ": " + mag.getTitle());
         }
 
 
